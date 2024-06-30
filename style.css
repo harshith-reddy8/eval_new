@@ -1,0 +1,86 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+/* Quiz Container Styles */
+#quiz-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+#rating-form label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#rating-form input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+#rating-form button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4CAF50;
+    color: #fff;
+    cursor: pointer;
+}
+
+#rating-form button:hover {
+    background-color: #45a049;
+}
+
+/* Comparison Container Styles */
+#comparison-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+#method-display pre {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 3px;
+    font-family: monospace;
+}
+
+#comparison-form textarea {
+    width: 100%;
+    height: 100px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    resize: vertical;
+}
+
+#comparison-form button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4CAF50;
+    color: #fff;
+    cursor: pointer;
+}
+
+#comparison-form button:hover {
+    background-color: #45a049;
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment Rating Survey</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #quiz-container, #comparison-container {
+            
+            display: none;
+            
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Comment Evaluation</h1>
+    <div id="quiz-container">
+        <h2>Comment Comparison</h2>
+        <div id="rating-instructions">
+                <p><strong>How to the use the Comment Rating Tool!</strong></p>
+                <p>In this section, you will review a code snippet and a comment below the code, provide feedback based on specific criteria. Please follow the instructions below:</p>
+                <ul>
+                    <li>Review the code snippet carefully.</li>
+                    <li>Provide a rating from 1 to 5, with 1 being the lowest and 5 being the highest.</li>
+                </ul>
+                <p>If you wish to skip this section, click on the "Skip" button.</p>
+                <p>If you want to move directly to the next section without submitting a rating, click on the "Skip & Move to Next Section" button.</p>
+                <p>If you want to submit your rating and then proceed to the next section, click on the "Submit & Skip to the Next Section" button.</p>
+        </div>
+        <div id="question-container"></div>
+        <form id="rating-form">
+            <label for="meaningfulness">Meaningfulness:</label>
+            <input type="number" id="meaningfulness" name="meaningfulness" min="1" max="5" step="1" required><br>
+            <label for="naturalness">Naturalness:</label>
+            <input type="number" id="naturalness" name="naturalness" min="1" max="5" step="1" required><br>
+            <label for="consistency">Consistency:</label>
+            <input type="number" id="consistency" name="consistency" min="1" max="5" step="1" required><br>
+            <button type="button" onclick="submitRating()">Submit</button>
+            <button type="button" onclick="skipToComparison()">Submit & Skip to the Next Section</button>
+            <button type="button" id="skip-question" onclick="skipQuestion()">Skip Question</button>
+            <button type="button" onclick="skipToComparison()">Skip & Move to Next Section</button>
+            
+
+        </form>
+    </div>
+    <div id="comparison-container">
+        <h2>Comment Comparison</h2>
+        <div id="comparison-instructions">
+            <p><strong>How to Use the Comment Comparison Tool</strong></p>
+            <ol>
+                <li>Review the two comments presented under "Comment 1" and "Comment 2" for the provided method below.</li>
+                <li>Compare the comments carefully, considering factors such as clarity, helpfulness, and relevance.</li>
+               
+                <li>Choose which comment you prefer by selecting and In the "Why?" section, briefly explain the reason for your preference. This helps us understand your decision-making process.</li>
+                <li>Once you've made your selection and provided your reasoning, you have three options:
+                    <ul>
+                        <li>Click "Submit" to record your choice and continue to the next comparison.</li>
+                        <li>Click "Skip" if you're unsure or don't want to compare these particular comments.</li>
+                        <li>Click "Submit & Finish" if this is your last comparison and you want to end the session.</li>
+                    </ul>
+                </li>
+            </ol>
+            <p>Remember, there are no right or wrong answers. We're interested in your honest opinion about which comment you find more effective or helpful.</p>
+           
+        </div>
+        <div id="method-display"></div>
+        <p>Comment 1: <span id="comment1"></span></p>
+        <p>Comment 2: <span id="comment2"></span></p>
+        <form id="comparison-form">
+            <p>Which comment do you prefer?</p>
+            <input type="radio" id="preferred-comment1" name="preferred-comment" value="Comment 1">
+            <label for="preferred-comment1">Comment 1</label><br>
+            <input type="radio" id="preferred-comment2" name="preferred-comment" value="Comment 2">
+            <label for="preferred-comment2">Comment 2</label><br>
+            <label for="reason">Why?</label><br>
+            <textarea id="reason" name="reason"></textarea><br>
+            <button type="button" onclick="submitComparison()">Submit</button>
+            <button type="button" onclick="skipComparison()">Skip & Finish</button>
+            <button type="button" onclick="submitAndFinish()">Submit & Finish</button>
+        </form>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
