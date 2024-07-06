@@ -20,10 +20,10 @@
 <body>
 
     <h1>Comment Evaluation</h1>
-    <div id="quiz-container">
+    <div id="quiz-container" style="display: block;">
         <h2>Comment Comparison</h2>
         <div id="rating-instructions">
-                <p><strong>How to the use the Comment Rating Tool!</strong></p>
+            <p><strong>How to the use the Comment Rating Tool!</strong></p>
                 <p>In this section, you will review a code snippet and a comment below the code, provide feedback based on specific criteria. Please follow the instructions below:</p>
                 <ul>
                     <li>Review the code snippet carefully.</li>
@@ -32,22 +32,54 @@
                 <p>If you wish to skip this section, click on the "Skip" button.</p>
                 <p>If you want to move directly to the next section without submitting a rating, click on the "Skip & Move to Next Section" button.</p>
                 <p>If you want to submit your rating and then proceed to the next section, click on the "Submit & Skip to the Next Section" button.</p>
+            <!-- Keep the existing rating instructions content here -->
         </div>
-        <div id="question-container"></div>
-        <form id="rating-form">
-            <label for="meaningfulness">Meaningfulness:</label>
-            <input type="number" id="meaningfulness" name="meaningfulness" min="1" max="5" step="1" required><br>
-            <label for="naturalness">Naturalness:</label>
-            <input type="number" id="naturalness" name="naturalness" min="1" max="5" step="1" required><br>
-            <label for="consistency">Consistency:</label>
-            <input type="number" id="consistency" name="consistency" min="1" max="5" step="1" required><br>
-            <button type="button" onclick="submitRating()">Submit</button>
-            <button type="button" onclick="skipToComparison()">Submit & Skip to the Next Section</button>
-            <button type="button" id="skip-question" onclick="skipQuestion()">Skip Question</button>
-            <button type="button" onclick="skipToComparison()">Skip & Move to Next Section</button>
-            
-
-        </form>
+        <div class="quiz-content">
+            <div id="question-container"></div>
+            <div class="rating-section">
+                <div id="comment-container"></div>
+                <form id="rating-form">
+                    <table class="rating-table">
+                        <tr>
+                            <th></th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th>
+                        </tr>
+                        <tr>
+                            <td>Meaningfulness:</td>
+                            <td><input type="radio" name="meaningfulness" value="1" required></td>
+                            <td><input type="radio" name="meaningfulness" value="2"></td>
+                            <td><input type="radio" name="meaningfulness" value="3"></td>
+                            <td><input type="radio" name="meaningfulness" value="4"></td>
+                            <td><input type="radio" name="meaningfulness" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Naturalness:</td>
+                            <td><input type="radio" name="naturalness" value="1" required></td>
+                            <td><input type="radio" name="naturalness" value="2"></td>
+                            <td><input type="radio" name="naturalness" value="3"></td>
+                            <td><input type="radio" name="naturalness" value="4"></td>
+                            <td><input type="radio" name="naturalness" value="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Consistency:</td>
+                            <td><input type="radio" name="consistency" value="1" required></td>
+                            <td><input type="radio" name="consistency" value="2"></td>
+                            <td><input type="radio" name="consistency" value="3"></td>
+                            <td><input type="radio" name="consistency" value="4"></td>
+                            <td><input type="radio" name="consistency" value="5"></td>
+                        </tr>
+                    </table>
+                    <button type="button" onclick="submitRating()">Submit</button>
+                    <button type="button" onclick="skipToComparison()">Submit & Skip to the Next Section</button>
+                    <button type="button" id="skip-question" onclick="skipQuestion()">Skip Question</button>
+                    <button type="button" onclick="skipToComparison()">Skip & Move to Next Section</button>
+                </form>
+            </div>
+        </div>
     </div>
     <div id="comparison-container">
         <h2>Comment Comparison</h2>
