@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentQuestionIndex = 0;
     let questions = [];
 
+    // Show the quiz container immediately
+    document.getElementById('quiz-container').style.display = 'block';
+
     // Fetch data from data.json
     fetch('data.json')
     .then(response => response.json())
@@ -9,10 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         questions = data;
         console.log('Questions loaded:', questions); // Debug statement
         loadQuestion();
-        document.getElementById('quiz-container').style.display = 'block';
 
-        // Add event listener for "Skip Question" button
-       
         const skipComparisonButton = document.querySelector('#comparison-container button[onclick="skipComparison()"]');
         skipComparisonButton.addEventListener('click', skipComparison);
 
@@ -21,18 +21,26 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch(error => {
         console.error('Error loading data.json:', error); // Debug statement
+        // Display an error message to the user
+        document.getElementById('question-container').innerHTML = '<p>Error loading questions. Please try refreshing the page.</p>';
     });
-
+    
     function loadQuestion() {
         if (currentQuestionIndex < questions.length) {
             const questionContainer = document.getElementById('question-container');
+            const commentContainer = document.getElementById('comment-container');
             const method = questions[currentQuestionIndex].method;
-            const comment = questions[currentQuestionIndex]['comment_2'];
-            console.log('Loading question:', currentQuestionIndex, method, comment); // Debug statement
-            questionContainer.innerHTML = `
-                <pre>${method}</pre>
-                <p>${comment}</p>
-            `;
+            const comment1 = questions[currentQuestionIndex]['comment_1'];
+            const comment2 = questions[currentQuestionIndex]['comment_2'];
+            console.log('Loading question:', currentQuestionIndex, method, comment1, comment2); // Debug statement
+            
+            questionContainer.innerHTML = <pre>${method}</pre>;
+            commentContainer.innerHTML = <p id="current-comment">${comment1}</p>;
+    
+            // Store both comments in data attributes
+            commentContainer.dataset.comment1 = comment1;
+            commentContainer.dataset.comment2 = comment2;
+            commentContainer.dataset.currentComment = 'comment1';
     
             // Clear the input fields
             document.getElementById('meaningfulness').value = '';
@@ -55,49 +63,75 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.submitRating = function() {
-        const meaningfulness = document.getElementById('meaningfulness').value;
-        const naturalness = document.getElementById('naturalness').value;
-        const consistency = document.getElementById('consistency').value;
-
-        if (!validateRating(meaningfulness) || !validateRating(naturalness) || !validateRating(consistency)) {
-            alert('Please enter valid ratings between 1 and 5.');
+        const meaningfulness = document.querySelector('input[name="meaningfulness"]:checked')?.value;
+        const naturalness = document.querySelector('input[name="naturalness"]:checked')?.value;
+        const consistency = document.querySelector('input[name="consistency"]:checked')?.value;
+    
+        if (!meaningfulness || !naturalness || !consistency) {
+            alert('Please select a rating for all criteria.');
             return;
         }
-
+    
+        const questionContainer = document.getElementById('comment-container');
+        const currentComment = questionContainer.dataset.currentComment;
+    
         const formData = {
             method_id: questions[currentQuestionIndex].method_id,
             method: questions[currentQuestionIndex].method,
-            comment: questions[currentQuestionIndex]['comment_2'],
+            comment: questionContainer.dataset[currentComment],
             meaningfulness: meaningfulness,
             naturalness: naturalness,
             consistency: consistency
         };
-
+    
         console.log('Submitting', formData); // Debug statement
-
+    
         submitToGoogleForms(formData);
-
-        currentQuestionIndex++;
-        loadQuestion();
+    
+        if (currentComment === 'comment1') {
+            // Switch to comment2
+            questionContainer.dataset.currentComment = 'comment2';
+            document.getElementById('current-comment').textContent = questionContainer.dataset.comment2;
+            
+            // Clear the radio button selections
+            document.querySelectorAll('#rating-form input[type="radio"]').forEach(radio => radio.checked = false);
+        } else {
+            // Move to the next question
+            currentQuestionIndex++;
+            loadQuestion();
+        }
     };
 
     window.skipToComparison = function() {
+        const questionContainer = document.getElementById('question-container');
+        const currentComment = questionContainer.dataset.currentComment;
+
         const formData = {
             method_id: questions[currentQuestionIndex].method_id,
             method: questions[currentQuestionIndex].method,
-            comment: questions[currentQuestionIndex]['comment_2'],
+            comment: questionContainer.dataset[currentComment],
             meaningfulness: null,
             naturalness: null,
             consistency: null
         };
-    
+
         console.log('Skipping to comparison', formData);
-    
+
         submitToGoogleForms(formData);
-    
+
+        // If we're on the first comment, submit a skipped entry for the second comment as well
+        if (currentComment === 'comment1') {
+            const secondFormData = {
+                ...formData,
+                comment: questionContainer.dataset.comment2
+            };
+            console.log('Skipping second comment', secondFormData);
+            submitToGoogleForms(secondFormData);
+        }
+
         document.getElementById('quiz-container').style.display = 'none';
         document.getElementById('comparison-container').style.display = 'block';
-    
+
         loadComparison();
     };
 
@@ -108,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const comment2 = questions[currentQuestionIndex]['comment_2'];
             console.log('Loading comparison:', currentQuestionIndex, method, comment1, comment2); // Debug statement
 
-            document.getElementById('method-display').innerHTML = `<pre>${method}</pre>`;
+            document.getElementById('method-display').innerHTML = <pre>${method}</pre>;
             document.getElementById('comment1').textContent = comment1;
             document.getElementById('comment2').textContent = comment2;
         } else {
@@ -189,28 +223,38 @@ document.addEventListener('DOMContentLoaded', () => {
     window.skipQuestion = function() {
         const skipQuestionButton = document.getElementById('skip-question');
         skipQuestionButton.removeEventListener('click', skipQuestion);
-    
+
+        const questionContainer = document.getElementById('question-container');
+        const currentComment = questionContainer.dataset.currentComment;
+
         const formData = {
             method_id: questions[currentQuestionIndex].method_id,
             method: questions[currentQuestionIndex].method,
-            comment: questions[currentQuestionIndex]['comment_2'],
+            comment: questionContainer.dataset[currentComment],
             meaningfulness: null,
             naturalness: null,
             consistency: null
         };
-    
+
         console.log('Skipping question', formData);
-    
+
         submitToGoogleForms(formData);
-    
-        currentQuestionIndex++;
-        if (currentQuestionIndex < questions.length) {
-            loadQuestion();
-            skipQuestionButton.addEventListener('click', skipQuestion);
+
+        if (currentComment === 'comment1') {
+            // Switch to comment2
+            questionContainer.dataset.currentComment = 'comment2';
+            document.getElementById('current-comment').textContent = questionContainer.dataset.comment2;
         } else {
-            document.getElementById('quiz-container').style.display = 'none';
-            document.getElementById('comparison-container').style.display = 'block';
-            loadComparison();
+            // Move to the next question
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+                skipQuestionButton.addEventListener('click', skipQuestion);
+            } else {
+                document.getElementById('quiz-container').style.display = 'none';
+                document.getElementById('comparison-container').style.display = 'block';
+                loadComparison();
+            }
         }
     };
     
@@ -218,8 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('quiz-container').style.display = 'none';
         document.getElementById('comparison-container').innerHTML = '<p>Thank you for completing the survey!</p>';
     };
-
-    
     
     window.submitAndFinish = function() {
         const preferredComment = document.querySelector('input[name="preferred-comment"]:checked').value;
