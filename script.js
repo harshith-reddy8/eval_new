@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(error => {
         console.error('Error loading data.json:', error); // Debug statement
         // Display an error message to the user
-        document.getElementById('question-container').innerHTML = '<p>Error loading questions. Please try refreshing the page.</p>';
+        document.getElementById('question-container').innerHTML = '<p>Thank you for participating in this survey. Below, you will find a method (code snippet). Please review it carefully before providing your answers.</p>';
     });
 
     function loadQuestion() {
