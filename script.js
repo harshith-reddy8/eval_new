@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Display an error message to the user
         document.getElementById('question-container').innerHTML = '<p>Error loading questions. Please try refreshing the page.</p>';
     });
-    
+
     function loadQuestion() {
         if (currentQuestionIndex < questions.length) {
             const questionContainer = document.getElementById('question-container');
@@ -34,8 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const comment2 = questions[currentQuestionIndex]['comment_2'];
             console.log('Loading question:', currentQuestionIndex, method, comment1, comment2); // Debug statement
             
-            questionContainer.innerHTML = <pre>${method}</pre>;
-            commentContainer.innerHTML = <p id="current-comment">${comment1}</p>;
+            questionContainer.innerHTML = `<pre>${method}</pre>`;
+            commentContainer.innerHTML = `<p id="current-comment">${comment1}</p>`;
     
             // Store both comments in data attributes
             commentContainer.dataset.comment1 = comment1;
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const comment2 = questions[currentQuestionIndex]['comment_2'];
             console.log('Loading comparison:', currentQuestionIndex, method, comment1, comment2); // Debug statement
 
-            document.getElementById('method-display').innerHTML = <pre>${method}</pre>;
+            document.getElementById('method-display').innerHTML = `<pre>${method}</pre>`;
             document.getElementById('comment1').textContent = comment1;
             document.getElementById('comment2').textContent = comment2;
         } else {
