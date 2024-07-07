@@ -84,7 +84,6 @@ h1, h2 {
 #comparison-form button:hover {
     background-color: #45a049;
 }
-
 /* Add these new styles at the end of your existing CSS file */
 
 .quiz-content {
@@ -123,7 +122,6 @@ h1, h2 {
         margin-top: 20px;
     }
 }
-
 
 /* Existing styles... */
 
