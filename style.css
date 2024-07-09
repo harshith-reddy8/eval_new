@@ -299,3 +299,27 @@ button {
     background-color: #e9f7ef;
     border-radius: 5px;
 }
+
+/* Update these existing styles */
+#question-container pre,
+.code-display pre {
+    font-size: 1.3em; /* Increased from 1.1em */
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-width: 100%;
+}
+
+/* Add these new styles for the rating inputs */
+.rating-table input[type="radio"] {
+    width: 18px; /* Decreased from 25px */
+    height: 18px; /* Decreased from 25px */
+}
+
+/* Update this existing style */
+.rating-table {
+    font-size: 1em; /* Decreased from 1.1em */
+}
