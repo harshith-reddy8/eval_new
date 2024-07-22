@@ -39,7 +39,7 @@
     },
     {
         "method_id": 19048,
-        "comment_1": " Adds a new export rule to the configuration.<p>   @param name the name of the rule  @param description the description for the rule ",
+        "comment_1": " Adds a new export rule to the configuration.   @param name the name of the rule  @param description the description for the rule ",
         "method": "\nMethod:\n void addExportRule(String, String){\n    m_exportRules.add(new CmsStaticExportExportRule(name, description, m_exportTmpRule.getModifiedResources(), m_exportTmpRule.getExportResourcePatterns()));\n    m_exportTmpRule = new CmsStaticExportExportRule(\"\", \"\");\n}\nComment:\n",
         "project": "alkacon",
         "key": "alkacon_19048",
@@ -58,7 +58,7 @@
     },
     {
         "method_id": 9964,
-        "comment_1": " Renders the entity form within the given context.<p>   @param entityId the entity id  @param formParent the form parent widget ",
+        "comment_1": " Renders the entity form within the given context.   @param entityId the entity id  @param formParent the form parent widget ",
         "method": "\nMethod:\n void renderInlineEntity(String, I_CmsInlineFormParent){\n    m_entity = m_entityBackend.getEntity(entityId);\n    if (m_entity != null) {\n        if (m_rootHandler == null) {\n            m_rootHandler = new CmsRootHandler();\n        } else {\n            m_rootHandler.clearHandlers();\n        }\n        m_validationHandler.setContentService(m_service);\n        m_validationHandler.registerEntity(m_entity);\n        m_validationHandler.setRootHandler(m_rootHandler);\n        CmsType type = m_entityBackend.getType(m_entity.getTypeName());\n        CmsButtonBarHandler.INSTANCE.setWidgetService(m_widgetService);\n        m_widgetService.getRendererForType(type).renderInline(m_entity, formParent, this, m_rootHandler, 0);\n        CmsUndoRedoHandler.getInstance().initialize(m_entity, this, m_rootHandler);\n    }\n}\nComment:\n",
         "project": "alkacon",
         "key": "alkacon_9964",
@@ -77,7 +77,7 @@
     },
     {
         "method_id": 26734,
-        "comment_1": " Returns if the given resource was visited by the user.<p>   @param cms the current users context  @param fileName the file name to track  @param subFolder flag indicating if sub folders should be included  @param user the user that should be used for the check  @param req the current request   return <code>true<code> if the given resource was visited by the user, otherwise <code>false<code>   throws CmsException if something goes wrong ",
+        "comment_1": " Returns if the given resource was visited by the user.   @param cms the current users context  @param fileName the file name to track  @param subFolder flag indicating if sub folders should be included  @param user the user that should be used for the check  @param req the current request   return <code>true<code> if the given resource was visited by the user, otherwise <code>false<code>   throws CmsException if something goes wrong ",
         "method": "\nMethod:\n boolean isResourceVisited(CmsObject, String, boolean, CmsUser, HttpServletRequest){\n    CmsResource checkResource = cms.readResource(fileName);\n    HttpSession session = req.getSession(true);\n    String sessionKey = generateSessionKey(SESSION_PREFIX_VISITED, fileName, subFolder, user, null);\n    // try to get the visited resources from a session attribute\n    @SuppressWarnings(\"unchecked\")\n    List<CmsResource> visitedResources = (List<CmsResource>) req.getSession(true).getAttribute(sessionKey);\n    if (visitedResources == null) {\n        // first call, read visited resources and store them to session attribute\n        CmsVisitedByFilter filter = new CmsVisitedByFilter();\n        filter.setUser(user);\n        filter.setParentPath(CmsResource.getFolderPath(checkResource.getRootPath()));\n        filter.setIncludeSubfolders(subFolder);\n        visitedResources = OpenCms.getSubscriptionManager().readResourcesVisitedBy(cms, filter);\n        session.setAttribute(sessionKey, visitedResources);\n    }\n    return visitedResources.contains(checkResource);\n}\nComment:\n",
         "project": "alkacon",
         "key": "alkacon_26734",
@@ -96,7 +96,7 @@
     },
     {
         "method_id": 48196,
-        "comment_1": " Returns the preferred editor preselection value either from the request, if not present, from the user settings.<p>   @param request the current http servlet request  @param galleryType the preferred gallery type  return the preferred editor preselection value or null, if none found ",
+        "comment_1": " Returns the preferred editor preselection value either from the request, if not present, from the user settings.   @param request the current http servlet request  @param galleryType the preferred gallery type  return the preferred editor preselection value or null, if none found ",
         "method": "\nMethod:\n String computeStartGalleryPreselection(HttpServletRequest, String){\n    // first check presence of the setting in request parameter\n    String preSelection = request.getParameter(PARAM_STARTGALLERY_PREFIX + galleryType);\n    if (CmsStringUtil.isNotEmptyOrWhitespaceOnly(preSelection)) {\n        return CmsEncoder.decode(preSelection);\n    } else {\n        // no value found in request, check current user settings (not the member!)\n        CmsUserSettings userSettings = new CmsUserSettings(getSettings().getUser());\n        return userSettings.getStartGallery(galleryType);\n    }\n}\nComment:\n",
         "project": "alkacon",
         "key": "alkacon_48196",
@@ -134,7 +134,7 @@
     },
     {
         "method_id": 38577,
-        "comment_1": " Creates an SQL flag check condition.<p>   @param users the user table alias  @param flags the flags to check   return the resulting SQL expression ",
+        "comment_1": " Creates an SQL flag check condition.   @param users the user table alias  @param flags the flags to check   return the resulting SQL expression ",
         "method": "\nMethod:\n I_CmsQueryFragment createFlagCondition(TableAlias, int){\n    return new CmsSimpleQueryFragment(users.column(colFlags()) + \" & ? = ? \", Integer.valueOf(flags), Integer.valueOf(flags));\n}\nComment:\n",
         "project": "alkacon",
         "key": "alkacon_38577",
@@ -153,7 +153,7 @@
     },
     {
         "method_id": 1593,
-        "comment_1": " Adds necessary attributes to the map.<p>   @param attributes the attribute map  @param callback the callback to execute ",
+        "comment_1": " Adds necessary attributes to the map.   @param attributes the attribute map  @param callback the callback to execute ",
         "method": "\nMethod:\n void getImageAttributes(Map, I_CmsSimpleCallback){\n    if (getGalleryMode() == GalleryMode.editor) {\n        m_imageEditorFormatsTab.getImageAttributes(attributes);\n        m_imageAdvancedTab.getImageAttributes(attributes, callback);\n    } else {\n        callback.execute(attributes);\n    }\n}\nComment:\n",
         "project": "alkacon",
         "key": "alkacon_1593",
@@ -172,7 +172,7 @@
     },
     {
         "method_id": 37061,
-        "comment_1": " Counts the total number of users which match the given search criteria.<p>   @param requestContext the request context  @param searchParams the search criteria object   return the number of users which match the search criteria  throws CmsException if something goes wrong ",
+        "comment_1": " Counts the total number of users which match the given search criteria.   @param requestContext the request context  @param searchParams the search criteria object   return the number of users which match the search criteria  throws CmsException if something goes wrong ",
         "method": "\nMethod:\n long countUsers(CmsRequestContext, CmsUserSearchParameters){\n    CmsDbContext dbc = m_dbContextFactory.getDbContext(requestContext);\n    try {\n        return m_driverManager.countUsers(dbc, searchParams);\n    } catch (Exception e) {\n        dbc.report(null, Messages.get().container(Messages.ERR_COUNT_USERS_0), e);\n        return -1;\n    } finally {\n        dbc.clear();\n    }\n}\nComment:\n",
         "project": "alkacon",
         "key": "alkacon_37061",
@@ -210,7 +210,7 @@
     },
     {
         "method_id": 9458,
-        "comment_1": " This schedules a new validation to be run after all currently scheduled or running validations have finished.<p>   If there are no validations running, the validation will be started immediately.<p>   @param action the validation to be scheduled ",
+        "comment_1": " This schedules a new validation to be run after all currently scheduled or running validations have finished.   If there are no validations running, the validation will be started immediately.   @param action the validation to be scheduled ",
         "method": "\nMethod:\n void schedule(CmsValidationController){\n    if (m_idle) {\n        m_idle = false;\n        action.internalStartValidation();\n    } else {\n        m_actions.add(action);\n    }\n}\nComment:\n",
         "project": "alkacon",
         "key": "alkacon_9458",
@@ -229,7 +229,7 @@
     },
     {
         "method_id": 32643,
-        "comment_1": " Returns the path parameter as string.<p>   return the path parameter as string ",
+        "comment_1": " Returns the path parameter as string.   return the path parameter as string ",
         "method": "\nMethod:\n String getParamPath(){\n    String paramPath = m_context.getParameters().get(PARAM_PATH);\n    return paramPath;\n}\nComment:\n",
         "project": "alkacon",
         "key": "alkacon_32643",
@@ -248,7 +248,7 @@
     },
     {
         "method_id": 19452,
-        "comment_1": " Returns all child organizational units of the given parent organizational unit including  hierarchical deeper organization units if needed.<p>   @param cms the opencms context  @param ouFqn the fully qualified name of the parent organizational unit  @param includeChildren if hierarchical deeper organization units should also be returned   return a list of <code>@link CmsOrganizationalUnit<code> objects   throws CmsException if operation was not successful ",
+        "comment_1": " Returns all child organizational units of the given parent organizational unit including  hierarchical deeper organization units if needed.   @param cms the opencms context  @param ouFqn the fully qualified name of the parent organizational unit  @param includeChildren if hierarchical deeper organization units should also be returned   return a list of <code>@link CmsOrganizationalUnit<code> objects   throws CmsException if operation was not successful ",
         "method": "\nMethod:\n List<CmsOrganizationalUnit> getOrganizationalUnits(CmsObject, String, boolean){\n    CmsOrganizationalUnit parent = readOrganizationalUnit(cms, ouFqn);\n    return m_securityManager.getOrganizationalUnits(cms.getRequestContext(), parent, includeChildren);\n}\nComment:\n",
         "project": "alkacon",
         "key": "alkacon_19452",
@@ -495,7 +495,7 @@
     },
     {
         "method_id": 21645,
-        "comment_1": " Collects the validation action output groups from every dependency-type attribute on this rule.  This is done within @link RuleConfiguredTargetBuilder so that every rule always and  automatically propagates the validation action output group.   <p>Note that in addition to @link LabelClass.DEPENDENCY, there is also @link  LabelClass.FILESET_ENTRY, however the fileset implementation takes care of propagating the  validation action output group itself. ",
+        "comment_1": " Collects the validation action output groups from every dependency-type attribute on this rule.  This is done within @link RuleConfiguredTargetBuilder so that every rule always and  automatically propagates the validation action output group.   Note that in addition to @link LabelClass.DEPENDENCY, there is also @link  LabelClass.FILESET_ENTRY, however the fileset implementation takes care of propagating the  validation action output group itself. ",
         "method": "\nMethod:\n void collectTransitiveValidationOutputGroups(){\n    for (String attributeName : ruleContext.attributes().getAttributeNames()) {\n        Attribute attribute = ruleContext.attributes().getAttributeDefinition(attributeName);\n        // Validation actions for tools, or from implicit deps should\n        // not fail the overall build, since those dependencies should have their own builds\n        // and tests that should surface any failing validations.\n        if (!attribute.getTransitionFactory().isTool() && !attribute.isImplicit() && attribute.getType().getLabelClass() == LabelClass.DEPENDENCY) {\n            for (OutputGroupInfo outputGroup : ruleContext.getPrerequisites(attributeName, OutputGroupInfo.STARLARK_CONSTRUCTOR)) {\n                NestedSet<Artifact> validationArtifacts = outputGroup.getOutputGroup(OutputGroupInfo.VALIDATION);\n                if (!validationArtifacts.isEmpty()) {\n                    addOutputGroup(OutputGroupInfo.VALIDATION, validationArtifacts);\n                }\n            }\n        }\n    }\n}\nComment:\n",
         "project": "bazel",
         "key": "bazel_21645",
@@ -590,7 +590,7 @@
     },
     {
         "method_id": 31465,
-        "comment_1": " Set the global retention. This is expected to be used by the cluster settings to dynamically control the global retention time.  <p>  Even if the current license prevents retention updates, it will accept the change so that they do not need to re-set it if they  upgrade their license (they can always unset it).   @param globalRetention The global retention to use dynamically. ",
+        "comment_1": " Set the global retention. This is expected to be used by the cluster settings to dynamically control the global retention time.    Even if the current license prevents retention updates, it will accept the change so that they do not need to re-set it if they  upgrade their license (they can always unset it).   @param globalRetention The global retention to use dynamically. ",
         "method": "\nMethod:\n void setGlobalRetention(TimeValue){\n    // notify the user that their setting will be ignored until they get the right license\n    if (licenseState.checkFeature(Feature.MONITORING_UPDATE_RETENTION) == false) {\n        logger.warn(\"[{}] setting will be ignored until an appropriate license is applied\", MonitoringField.HISTORY_DURATION.getKey());\n    }\n    this.globalRetention = globalRetention;\n}\nComment:\n",
         "project": "elasticsearch",
         "key": "elasticsearch_31465",
@@ -685,7 +685,7 @@
     },
     {
         "method_id": 9288,
-        "comment_1": " Put trained model config asynchronously and notifies listener upon completion  <p>  For additional info  see <a href=\"TODO\">      PUT Trained Model Config documentation<a>   @param request The @link PutTrainedModelRequest  @param options Additional request options (e.g. headers), use @link RequestOptions#DEFAULT if nothing needs to be customized  @param listener Listener to be notified upon request completion  return cancellable that may be used to cancel the request ",
+        "comment_1": " Put trained model config asynchronously and notifies listener upon completion    For additional info  see <a href=\"TODO\">      PUT Trained Model Config documentation<a>   @param request The @link PutTrainedModelRequest  @param options Additional request options (e.g. headers), use @link RequestOptions#DEFAULT if nothing needs to be customized  @param listener Listener to be notified upon request completion  return cancellable that may be used to cancel the request ",
         "method": "\nMethod:\n Cancellable putTrainedModelAsync(PutTrainedModelRequest, RequestOptions, ActionListener){\n    return restHighLevelClient.performRequestAsyncAndParseEntity(request, MLRequestConverters::putTrainedModel, options, PutTrainedModelResponse::fromXContent, listener, Collections.emptySet());\n}\nComment:\n",
         "project": "elasticsearch",
         "key": "elasticsearch_9288",
@@ -932,7 +932,7 @@
     },
     {
         "method_id": 59200,
-        "comment_1": " Return a function that creates new path-matching @code RequestPredicates  from pattern Strings using the given @link PathPatternParser.  <p>This method can be used to specify a non-default, customized  @code PathPatternParser when resolving path patterns.  @param patternParser the parser used to parse patterns given to the returned function  return a function that resolves a pattern String into a path-matching  @code RequestPredicates instance ",
+        "comment_1": " Return a function that creates new path-matching @code RequestPredicates  from pattern Strings using the given @link PathPatternParser.  This method can be used to specify a non-default, customized  @code PathPatternParser when resolving path patterns.  @param patternParser the parser used to parse patterns given to the returned function  return a function that resolves a pattern String into a path-matching  @code RequestPredicates instance ",
         "method": "\nMethod:\n Function<String,RequestPredicate> pathPredicates(PathPatternParser){\n    Assert.notNull(patternParser, \"PathPatternParser must not be null\");\n    return pattern -> new PathPatternPredicate(patternParser.parse(pattern));\n}\nComment:\n",
         "project": "spring-framework",
         "key": "spring-framework_59200",
