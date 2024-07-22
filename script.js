@@ -103,13 +103,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     
         const questionContainer = document.getElementById('comment-container');
-        const comments = JSON.parse(questionContainer.dataset.comments);
         const currentCommentIndex = parseInt(questionContainer.dataset.currentCommentIndex);
     
         const formData = {
             method_id: questions[currentQuestionIndex].method_id,
             method: questions[currentQuestionIndex].method,
-            comment: comments[currentCommentIndex],
+            comment: `comment_${currentCommentIndex + 1}`, // This line is changed
             meaningfulness: meaningfulness,
             naturalness: naturalness,
             consistency: consistency
@@ -119,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
         submitToGoogleForms(formData);
     
+        const comments = JSON.parse(questionContainer.dataset.comments);
         if (currentCommentIndex < comments.length - 1) {
             // Move to the next comment
             questionContainer.dataset.currentCommentIndex = (currentCommentIndex + 1).toString();
