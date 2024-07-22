@@ -1,3 +1,10 @@
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 1; i--) {
+        const j = Math.floor(Math.random() * (i - 1)) + 1;
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    console.log('Shuffled questions:', array.map(q => q.method_id)); // Log shuffled question IDs
+}
 document.addEventListener('DOMContentLoaded', () => {
     let currentQuestionIndex = 0;
     let questions = [];
@@ -27,25 +34,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadQuestion() {
         if (currentQuestionIndex < questions.length) {
+            console.log('Current question index:', currentQuestionIndex);
+            
+            if (currentQuestionIndex === 1) {
+                console.log('Questions before shuffle:', questions.map(q => q.method_id));
+                shuffleArray(questions.slice(1));
+                console.log('Questions after shuffle:', questions.map(q => q.method_id));
+            }
+    
             const questionContainer = document.getElementById('question-container');
             const commentContainer = document.getElementById('comment-container');
             const method = questions[currentQuestionIndex].method;
-            const comment1 = questions[currentQuestionIndex]['comment_1'];
-            const comment2 = questions[currentQuestionIndex]['comment_2'];
-            console.log('Loading question:', currentQuestionIndex, method, comment1, comment2); // Debug statement
+            const comments = [];
+            let i = 1;
+            while (questions[currentQuestionIndex][`comment_${i}`]) {
+                comments.push(questions[currentQuestionIndex][`comment_${i}`]);
+                i++;
+            }
+            console.log('Loading question:', currentQuestionIndex, method, comments);
             
             questionContainer.innerHTML = `<pre>${method}</pre>`;
-            commentContainer.innerHTML = `<p id="current-comment">${comment1}</p>`;
+            commentContainer.innerHTML = `<p id="current-comment">${comments[0]}</p>`;
     
-            // Store both comments in data attributes
-            commentContainer.dataset.comment1 = comment1;
-            commentContainer.dataset.comment2 = comment2;
-            commentContainer.dataset.currentComment = 'comment1';
+            // Store all comments in data attributes
+            commentContainer.dataset.comments = JSON.stringify(comments);
+            commentContainer.dataset.currentCommentIndex = '0';
     
             // Clear the input fields
-            document.getElementById('meaningfulness').value = '';
-            document.getElementById('naturalness').value = '';
-            document.getElementById('consistency').value = '';
+            document.querySelectorAll('#rating-form input[type="radio"]').forEach(radio => radio.checked = false);
     
             const skipQuestionButton = document.getElementById('skip-question');
             skipQuestionButton.removeEventListener('click', skipQuestion);
@@ -73,12 +89,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     
         const questionContainer = document.getElementById('comment-container');
-        const currentComment = questionContainer.dataset.currentComment;
+        const comments = JSON.parse(questionContainer.dataset.comments);
+        const currentCommentIndex = parseInt(questionContainer.dataset.currentCommentIndex);
     
         const formData = {
             method_id: questions[currentQuestionIndex].method_id,
             method: questions[currentQuestionIndex].method,
-            comment: questionContainer.dataset[currentComment],
+            comment: comments[currentCommentIndex],
             meaningfulness: meaningfulness,
             naturalness: naturalness,
             consistency: consistency
@@ -88,10 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
         submitToGoogleForms(formData);
     
-        if (currentComment === 'comment1') {
-            // Switch to comment2
-            questionContainer.dataset.currentComment = 'comment2';
-            document.getElementById('current-comment').textContent = questionContainer.dataset.comment2;
+        if (currentCommentIndex < comments.length - 1) {
+            // Move to the next comment
+            questionContainer.dataset.currentCommentIndex = (currentCommentIndex + 1).toString();
+            document.getElementById('current-comment').textContent = comments[currentCommentIndex + 1];
             
             // Clear the radio button selections
             document.querySelectorAll('#rating-form input[type="radio"]').forEach(radio => radio.checked = false);
@@ -103,35 +120,27 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.skipToComparison = function() {
-        const questionContainer = document.getElementById('question-container');
-        const currentComment = questionContainer.dataset.currentComment;
-
-        const formData = {
-            method_id: questions[currentQuestionIndex].method_id,
-            method: questions[currentQuestionIndex].method,
-            comment: questionContainer.dataset[currentComment],
-            meaningfulness: null,
-            naturalness: null,
-            consistency: null
-        };
-
-        console.log('Skipping to comparison', formData);
-
-        submitToGoogleForms(formData);
-
-        // If we're on the first comment, submit a skipped entry for the second comment as well
-        if (currentComment === 'comment1') {
-            const secondFormData = {
-                ...formData,
-                comment: questionContainer.dataset.comment2
+        const questionContainer = document.getElementById('comment-container');
+        const comments = JSON.parse(questionContainer.dataset.comments);
+    
+        comments.forEach(comment => {
+            const formData = {
+                method_id: questions[currentQuestionIndex].method_id,
+                method: questions[currentQuestionIndex].method,
+                comment: comment,
+                meaningfulness: null,
+                naturalness: null,
+                consistency: null
             };
-            console.log('Skipping second comment', secondFormData);
-            submitToGoogleForms(secondFormData);
-        }
-
+    
+            console.log('Skipping to comparison', formData);
+    
+            submitToGoogleForms(formData);
+        });
+    
         document.getElementById('quiz-container').style.display = 'none';
         document.getElementById('comparison-container').style.display = 'block';
-
+    
         loadComparison();
     };
 
@@ -223,38 +232,34 @@ document.addEventListener('DOMContentLoaded', () => {
     window.skipQuestion = function() {
         const skipQuestionButton = document.getElementById('skip-question');
         skipQuestionButton.removeEventListener('click', skipQuestion);
-
-        const questionContainer = document.getElementById('question-container');
-        const currentComment = questionContainer.dataset.currentComment;
-
-        const formData = {
-            method_id: questions[currentQuestionIndex].method_id,
-            method: questions[currentQuestionIndex].method,
-            comment: questionContainer.dataset[currentComment],
-            meaningfulness: null,
-            naturalness: null,
-            consistency: null
-        };
-
-        console.log('Skipping question', formData);
-
-        submitToGoogleForms(formData);
-
-        if (currentComment === 'comment1') {
-            // Switch to comment2
-            questionContainer.dataset.currentComment = 'comment2';
-            document.getElementById('current-comment').textContent = questionContainer.dataset.comment2;
+    
+        const questionContainer = document.getElementById('comment-container');
+        const comments = JSON.parse(questionContainer.dataset.comments);
+    
+        // Submit skipped entries for all comments of the current question
+        comments.forEach(comment => {
+            const formData = {
+                method_id: questions[currentQuestionIndex].method_id,
+                method: questions[currentQuestionIndex].method,
+                comment: comment,
+                meaningfulness: null,
+                naturalness: null,
+                consistency: null
+            };
+    
+            console.log('Skipping question', formData);
+            submitToGoogleForms(formData);
+        });
+    
+        // Move to the next question
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            loadQuestion();
+            skipQuestionButton.addEventListener('click', skipQuestion);
         } else {
-            // Move to the next question
-            currentQuestionIndex++;
-            if (currentQuestionIndex < questions.length) {
-                loadQuestion();
-                skipQuestionButton.addEventListener('click', skipQuestion);
-            } else {
-                document.getElementById('quiz-container').style.display = 'none';
-                document.getElementById('comparison-container').style.display = 'block';
-                loadComparison();
-            }
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('comparison-container').style.display = 'block';
+            loadComparison();
         }
     };
     
