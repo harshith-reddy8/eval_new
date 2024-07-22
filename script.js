@@ -53,7 +53,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             console.log('Loading question:', currentQuestionIndex, method, comments);
             
-            questionContainer.innerHTML = `<pre>${method}</pre>`;
+            const highlightedMethod = method.replace(
+                /(\/\/.*|\/\*[\s\S]*?\*\/|\b(double|final|return|Math)\b)/g,
+                match => {
+                    if (match.startsWith('//') || match.startsWith('/*')) {
+                        return `<span class="comment">${match}</span>`;
+                    } else {
+                        return `<span class="keyword">${match}</span>`;
+                    }
+                }
+            );
+            
+            questionContainer.innerHTML = `
+                <p>Below, you will find a method (code snippet). Please review it carefully before providing your answers.</p>
+                <pre><code>${highlightedMethod}</code></pre>
+            `;
             commentContainer.innerHTML = `<p id="current-comment">${comments[0]}</p>`;
     
             // Store all comments in data attributes
