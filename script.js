@@ -1,10 +1,10 @@
 function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+    for (let i = array.length - 1; i > 1; i--) {
+        const j = Math.floor(Math.random() * (i - 1)) + 1;
         [array[i], array[j]] = [array[j], array[i]];
     }
+    console.log('Shuffled questions:', array.map(q => q.method_id)); // Log shuffled question IDs
 }
-
 document.addEventListener('DOMContentLoaded', () => {
     let currentQuestionIndex = 0;
     let questions = [];
@@ -18,12 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(data => {
         questions = data;
         console.log('Questions loaded:', questions); // Debug statement
-        
-        // Shuffle all questions except the first one
-        if (questions.length > 1) {
-            shuffleArray(questions.slice(1));
-        }
-        
         loadQuestion();
 
         const skipComparisonButton = document.querySelector('#comparison-container button[onclick="skipComparison()"]');
@@ -42,6 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentQuestionIndex < questions.length) {
             console.log('Current question index:', currentQuestionIndex);
             
+            if (currentQuestionIndex === 1) {
+                console.log('Questions before shuffle:', questions.map(q => q.method_id));
+                shuffleArray(questions.slice(1));
+                console.log('Questions after shuffle:', questions.map(q => q.method_id));
+            }
+    
             const questionContainer = document.getElementById('question-container');
             const commentContainer = document.getElementById('comment-container');
             const method = questions[currentQuestionIndex].method;
@@ -51,10 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 comments.push(questions[currentQuestionIndex][`comment_${i}`]);
                 i++;
             }
-    
-            // Shuffle the comments
-            shuffleArray(comments);
-            
             console.log('Loading question:', currentQuestionIndex, method, comments);
             
             questionContainer.innerHTML = `<pre>${method}</pre>`;
