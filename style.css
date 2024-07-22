@@ -323,3 +323,63 @@ button {
 .rating-table {
     font-size: 1em; /* Decreased from 1.1em */
 }
+
+/* Improved code snippet styling */
+#question-container pre {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.4;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+#question-container pre code {
+    display: block;
+}
+
+#question-container pre code .keyword {
+    color: #0000ff;
+    font-weight: bold;
+}
+
+#question-container pre code .comment {
+    color: #008000;
+    font-style: italic;
+}
+
+/* Different colored buttons for the comment rating section */
+#rating-form button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1em;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+#rating-form button:hover {
+    opacity: 0.9;
+}
+
+#rating-form button:nth-of-type(1) {
+    background-color: #4CAF50; /* Green */
+}
+
+#rating-form button:nth-of-type(2) {
+    background-color: #008CBA; /* Blue */
+}
+
+#rating-form button:nth-of-type(3) {
+    background-color: #f44336; /* Red */
+}
+
+#rating-form button:nth-of-type(4) {
+    background-color: #ff9800; /* Orange */
+}
