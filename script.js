@@ -48,9 +48,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const comments = [];
             let i = 1;
             while (questions[currentQuestionIndex][`comment_${i}`]) {
-                comments.push(questions[currentQuestionIndex][`comment_${i}`]);
+                comments.push({
+                    text: questions[currentQuestionIndex][`comment_${i}`],
+                    index: i
+                });
                 i++;
             }
+            
+            // Shuffle the comments
+            shuffleArray(comments);
+            
             console.log('Loading question:', currentQuestionIndex, method, comments);
             
             const highlightedMethod = method.replace(
@@ -68,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p>Below, you will find a method (code snippet). Please review it carefully before providing your answers.</p>
                 <pre><code>${highlightedMethod}</code></pre>
             `;
-            commentContainer.innerHTML = `<p id="current-comment">${comments[0]}</p>`;
+            commentContainer.innerHTML = `<p id="current-comment">${comments[0].text}</p>`;
     
             // Store all comments in data attributes
             commentContainer.dataset.comments = JSON.stringify(comments);
@@ -103,26 +110,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     
         const questionContainer = document.getElementById('comment-container');
+        const comments = JSON.parse(questionContainer.dataset.comments);
         const currentCommentIndex = parseInt(questionContainer.dataset.currentCommentIndex);
     
         const formData = {
             method_id: questions[currentQuestionIndex].method_id,
             method: questions[currentQuestionIndex].method,
-            comment: `comment_${currentCommentIndex + 1}`, // This line is changed
+            comment: `comment_${comments[currentCommentIndex].index}`,
             meaningfulness: meaningfulness,
             naturalness: naturalness,
             consistency: consistency
         };
     
-        console.log('Submitting', formData); // Debug statement
+        console.log('Submitting', formData);
     
         submitToGoogleForms(formData);
     
-        const comments = JSON.parse(questionContainer.dataset.comments);
         if (currentCommentIndex < comments.length - 1) {
             // Move to the next comment
             questionContainer.dataset.currentCommentIndex = (currentCommentIndex + 1).toString();
-            document.getElementById('current-comment').textContent = comments[currentCommentIndex + 1];
+            document.getElementById('current-comment').textContent = comments[currentCommentIndex + 1].text;
             
             // Clear the radio button selections
             document.querySelectorAll('#rating-form input[type="radio"]').forEach(radio => radio.checked = false);
